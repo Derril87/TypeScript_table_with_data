@@ -22,6 +22,10 @@ const DdTable:React.FC = () => {
 
     const initialColumns: string[] = ["First Name", "Last Name", "Phone Number", "Email"]
 
+    const columnToKey = (col: string) =>
+        col.replace(/\s+/g, '')
+           .replace(/^[A-Z]/, (match) => match.toLowerCase());
+
     const initialTableRow:{ [key:string]: string | boolean}[] = [
         {
             firstName: "Yaroslav",
@@ -132,18 +136,21 @@ const DdTable:React.FC = () => {
 
                {isShowAddRowInput && (
                    <div style={{ marginTop: 20 }}>
-                       {columns.map((col, index) => (
-                           <TextField
-                               key={index}
-                               label={col}
-                               variant="outlined"
-                               style={{ marginRight: 10, marginBottom: 10 }}
-                               value={newRow[col] || ''}
-                               onChange={(event) =>
-                                   setNewRow({ ...newRow, [col]: event.target.value })
-                               }
-                           />
-                       ))}
+                       {columns.map((col, index) => {
+                           const key = columnToKey(col);
+                           return (
+                               <TextField
+                                   key={index}
+                                   label={col}
+                                   variant="outlined"
+                                   style={{ marginRight: 10, marginBottom: 10 }}
+                                   value={newRow[key] || ''}
+                                   onChange={(event) =>
+                                       setNewRow({ ...newRow, [key]: event.target.value })
+                                   }
+                               />
+                           );
+                       })}
                        <Button
                            variant="contained"
                            onClick={() => {
